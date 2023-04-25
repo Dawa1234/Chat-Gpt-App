@@ -1,8 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
 
 import 'package:chatgpt/data/models/response.dart';
-import 'package:http/http.dart' as http;
+import 'package:chatgpt/data/repository/gptRepo.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -104,39 +103,22 @@ class _HomeScreenState extends State<HomeScreen> {
                                 setState(() {
                                   _loading = true;
                                 });
-                                const String token =
-                                    "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";
-                                const String url =
-                                    'https://api.openai.com/v1/chat/completions';
-
                                 try {
-                                  final response = await http.post(
-                                    Uri.parse(url),
-                                    headers: <String, String>{
-                                      'Content-Type': 'application/json',
-                                      'Authorization': 'Bearer $token',
-                                    },
-                                    body: jsonEncode({
-                                      "model": "gpt-3.5-turbo-0301",
-                                      "messages": [
-                                        {
-                                          "role": "user",
-                                          "content": _textContoller.text
-                                        }
-                                      ]
-                                    }),
-                                  );
-
-                                  if (response.statusCode == 200) {
-                                    setState(() {
-                                      _loading = false;
-                                    });
-                                    // since body response is in String so decode to json
-                                    var data = jsonDecode(response.body);
-                                    // then convert to dart object
-                                    responseModel =
-                                        ResponseModel.fromJson(data);
-                                  }
+                                  await GptRepository()
+                                      .getResponse(_textContoller.text)
+                                      .then((value) {
+                                    if (value != null) {
+                                      responseModel = value;
+                                      log("reponse ....");
+                                      // setState(() {
+                                      //   _loading = false;
+                                      // });
+                                      return;
+                                    }
+                                  });
+                                  setState(() {
+                                    _loading = false;
+                                  });
                                 } catch (e) {
                                   log("Error: $e");
                                 }
