@@ -1,3 +1,4 @@
+import 'package:chatgpt/logic/bloc/bloc/response_model_bloc.dart';
 import 'package:chatgpt/logic/cubit/loading/loading_cubit.dart';
 import 'package:chatgpt/presentation/screens/home.dart';
 import 'package:chatgpt/presentation/theme/mainTheme.dart';
@@ -13,8 +14,11 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => LoadingCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (context) => LoadingCubit()),
+        BlocProvider(create: (context) => ResponseModelBloc()),
+      ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: themeData,
