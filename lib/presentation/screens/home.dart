@@ -1,3 +1,4 @@
+// TODO Implement this library.
 import 'dart:developer';
 
 import 'package:chatgpt/data/models/response.dart';
@@ -18,6 +19,28 @@ class _HomeScreenState extends State<HomeScreen> {
   ResponseModel? responseModel;
   final _textContoller = TextEditingController();
   final _formKey = GlobalKey<FormState>();
+
+  _getGptResponse() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _loading = true;
+      });
+      try {
+        await GptRepository().getResponse(_textContoller.text).then((value) {
+          if (value != null) {
+            responseModel = value;
+            return;
+          }
+        });
+        setState(() {
+          _loading = false;
+        });
+      } catch (e) {
+        log("Error: $e");
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     log("Build UI");
@@ -96,30 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: const Color.fromARGB(255, 69, 157, 115),
                       textColor: Colors.white,
                       disabledColor: const Color.fromARGB(255, 106, 132, 120),
-                      onPressed: _loading
-                          ? null
-                          : () async {
-                              if (_formKey.currentState!.validate()) {
-                                setState(() {
-                                  _loading = true;
-                                });
-                                try {
-                                  await GptRepository()
-                                      .getResponse(_textContoller.text)
-                                      .then((value) {
-                                    if (value != null) {
-                                      responseModel = value;
-                                      return;
-                                    }
-                                  });
-                                  setState(() {
-                                    _loading = false;
-                                  });
-                                } catch (e) {
-                                  log("Error: $e");
-                                }
-                              }
-                            },
+                      onPressed: _loading ? null : () => _getGptResponse(),
                       child: const Text("Search"),
                     ),
                   ),

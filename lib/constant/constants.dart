@@ -1,5 +1,5 @@
 class Constants {
   static const String baseUrl = 'https://api.openai.com/v1/chat/completions';
   static const String token =
-      "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";
+      "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";
 }

@@ -1,4 +1,4 @@
-import 'package:chatgpt/presentation/home.dart';
+import 'package:chatgpt/presentation/screens/home.dart';
 import 'package:flutter/material.dart';
 
 void main() {
