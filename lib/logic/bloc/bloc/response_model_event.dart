@@ -15,3 +15,5 @@ class SuccessResponse extends ResponseModelEvent {
 }
 
 class FailedResponse extends ResponseModelEvent {}
+
+class GettingResponseEvent extends ResponseModelEvent {}

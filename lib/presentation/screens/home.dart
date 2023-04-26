@@ -25,13 +25,6 @@ class _HomeScreenState extends State<HomeScreen> {
   Future _getGptResponse() async {
     if (_formKey.currentState!.validate()) {
       BlocProvider.of<LoadingCubit>(context).isLoading();
-      ResponseModel? responseModel =
-          BlocProvider.of<ResponseModelBloc>(context).state.responseModel;
-      log("$responseModel");
-      if (responseModel != null) {
-        BlocProvider.of<LoadingCubit>(context).notLoading();
-        return;
-      }
     }
   }
 
@@ -90,32 +83,38 @@ class _HomeScreenState extends State<HomeScreen> {
                       );
                     },
                   ),
-                  BlocListener<LoadingCubit, LoadingState>(
-                    listener: (context, state) {
-                      if (state.isLoading) {
+                  BlocConsumer<LoadingCubit, LoadingState>(
+                    listener: (context, loadingState) {
+                      if (loadingState.isLoading) {
+                        // getting the data
+                        BlocProvider.of<ResponseModelBloc>(context)
+                            .add(GettingResponseEvent());
+                        // when succefully fetch data
                         BlocProvider.of<ResponseModelBloc>(context).add(
                             SuccessResponse(userInput: _textContoller.text));
                       }
                     },
-                    child: BlocBuilder<LoadingCubit, LoadingState>(
-                      builder: (context, state) {
-                        // BlocProvider.of<LoadingCubit>(context).notLoading();
-                        return state.isLoading
+                    builder: (context, loadingState) {
+                      return BlocListener<ResponseModelBloc,
+                          ResponseModelState>(
+                        listener: (context, state) {
+                          if (state.responseModel != null) {
+                            BlocProvider.of<LoadingCubit>(context).notLoading();
+                          }
+                        },
+                        child: loadingState.isLoading
                             ? const Center(
                                 child: CircularProgressIndicator(),
                               )
                             : BlocBuilder<ResponseModelBloc,
                                 ResponseModelState>(
-                                builder: (context, reponseState) {
-                                  // BlocProvider.of<LoadingCubit>(context).notLoading();
-                                  log("stop loading....");
+                                builder: (context, state) {
                                   return MessageContainer(
-                                      responseModel:
-                                          reponseState.responseModel);
+                                      responseModel: state.responseModel);
                                 },
-                              );
-                      },
-                    ),
+                              ),
+                      );
+                    },
                   ),
                   gapVertical10,
                   // Bottom Text

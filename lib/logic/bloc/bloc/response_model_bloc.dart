@@ -8,10 +8,10 @@ part 'response_model_state.dart';
 class ResponseModelBloc extends Bloc<ResponseModelEvent, ResponseModelState> {
   ResponseModelBloc() : super(const ResponseModelInitial()) {
     on<SuccessResponse>(_onSuccess);
-    on<FailedResponse>(
-        (FailedResponse event, Emitter<ResponseModelState> emit) {
-      emit(const ResponseModelState(responseModel: null));
+    on<GettingResponseEvent>((event, emit) {
+      emit(const GettingResponseState());
     });
+    on<FailedResponse>(_onFailed);
   }
 
   void _onSuccess(
@@ -27,5 +27,9 @@ class ResponseModelBloc extends Bloc<ResponseModelEvent, ResponseModelState> {
     } catch (e) {
       emit(const ResponseModelState(responseModel: null));
     }
+  }
+
+  void _onFailed(FailedResponse event, Emitter<ResponseModelState> emit) {
+    emit(const ResponseModelState(responseModel: null));
   }
 }

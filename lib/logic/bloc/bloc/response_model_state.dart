@@ -11,3 +11,7 @@ class ResponseModelState extends Equatable {
 class ResponseModelInitial extends ResponseModelState {
   const ResponseModelInitial() : super(responseModel: null);
 }
+
+class GettingResponseState extends ResponseModelState {
+  const GettingResponseState() : super(responseModel: null);
+}
