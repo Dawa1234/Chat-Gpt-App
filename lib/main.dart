@@ -2,6 +2,7 @@ import 'package:chatgpt/logic/bloc/bloc/response_model_bloc.dart';
 import 'package:chatgpt/logic/cubit/loading/loading_cubit.dart';
 import 'package:chatgpt/presentation/screens/home.dart';
 import 'package:chatgpt/presentation/theme/mainTheme.dart';
+import 'package:chatgpt/routes/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -22,7 +23,8 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: themeData,
-        home: const HomeScreen(),
+        initialRoute: HomeScreen.route,
+        routes: getRoutes,
       ),
     );
   }
