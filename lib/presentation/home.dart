@@ -109,10 +109,6 @@ class _HomeScreenState extends State<HomeScreen> {
                                       .then((value) {
                                     if (value != null) {
                                       responseModel = value;
-                                      log("reponse ....");
-                                      // setState(() {
-                                      //   _loading = false;
-                                      // });
                                       return;
                                     }
                                   });
